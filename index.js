@@ -6,6 +6,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
+const Message = require('./models/Message');
 const { body, validationResult } = require("express-validator");
 require("dotenv").config();
 
@@ -73,6 +74,10 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(function (req, res, next) {
+    res.locals.currentUser = req.user;
+    next();
+});
 
 app.get("/", (req, res) => {
     res.render("index", { user: req.user })
@@ -118,6 +123,43 @@ app.get('/log-out', (req, res, next) => {
         res.redirect("/");
     });
 });
+
+//msg
+app.get('/message-form', (req, res) => {
+    res.render("message-form")
+});
+
+app.post("/message-form", (req, res, next) => {
+    const msg = new Message({
+        title: req.body.title,
+        author: req.user._id,
+        text: req.body.message,
+        date: Date.now()
+    });
+
+    msg.save()
+        .then(() => {
+            res.redirect("/messages");
+        })
+        .catch((err) => {
+            next(err);
+        });
+});
+
+app.get('/messages', (req, res, next) => {
+    Message.find({}, "title text author date")
+        .sort({ date: -1 })
+        .then(all_messages => {
+            res.render("messages", {
+                title: "Messages",
+                messages: all_messages
+            });
+        })
+        .catch(err => {
+            next(err);
+        })
+});
+
 
 
 app.listen(3000, () => console.log("app listening on port 3000"));

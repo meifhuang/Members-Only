@@ -13,6 +13,7 @@
     <% if (user) {%>
         <h1>Welcome <%= user.first %>
         </h1>
+        <a href="/message-form"> Create a message </a>
         <a href="/log-out"> LOG OUT </a>
         <% } else { %>
             <h1 class=text-center>Login</h1>
