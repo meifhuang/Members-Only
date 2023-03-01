@@ -80,14 +80,26 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", (req, res) => {
-    res.render("index", { user: req.user })
+    Message.find({}, "title text author date")
+        .sort({ date: -1 })
+        .then(all_messages => {
+            res.render("index", {
+                title: "Messages",
+                messages: all_messages,
+                user: req.user
+            });
+        })
+        .catch(err => {
+            next(err);
+        })
+    // res.render("index", { user: req.user })
 });
 
 app.get("/login", (req, res) => {
     res.render("login")
 });
 
-app.get("/sign-up", (req, res) => res.render("sign-up"));
+app.get("/sign-up", (req, res) => res.render("sign-up", { heading: "Sign Up", user: req.user }));
 
 app.post("/sign-up", (req, res, next) => {
 
@@ -126,7 +138,7 @@ app.get('/log-out', (req, res, next) => {
 
 //msg
 app.get('/message-form', (req, res) => {
-    res.render("message-form")
+    res.render("message-form", { user: req.user })
 });
 
 app.post("/message-form", (req, res, next) => {
@@ -147,19 +159,23 @@ app.post("/message-form", (req, res, next) => {
 });
 
 app.get('/messages', (req, res, next) => {
-    Message.find({}, "title text author date")
-        .sort({ date: -1 })
-        .then(all_messages => {
-            res.render("messages", {
-                title: "Messages",
-                messages: all_messages
-            });
-        })
-        .catch(err => {
-            next(err);
-        })
+
 });
 
 
+//Turn this to .then and catch;
+app.post('/join-club', (req, res, next) => {
+    const enteredCode = req.body.code;
+    console.log("HI", req.user._id);
+    if (enteredCode === process.env.member_code) {
+        User.findByIdAndUpdate(req.user._id, { member: true })
+            .then(user => {
+                res.redirect('/')
+            })
+            .catch(err => {
+                next(err);
+            })
+    }
+})
 
 app.listen(3000, () => console.log("app listening on port 3000"));
