@@ -13,6 +13,7 @@ require("dotenv").config();
 const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + '/public'));
 
 const mongoDb = process.env.mongo;
 mongoose.set('strictQuery', false);
@@ -80,9 +81,10 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", (req, res) => {
-    Message.find({}, "title text author date")
-        .sort({ date: -1 })
-        .then(all_messages => {
+    Message.find({})
+    .populate('author')
+    .sort({ date: -1 })
+    .then(all_messages => {
             res.render("index", {
                 title: "Messages",
                 messages: all_messages,
@@ -95,11 +97,11 @@ app.get("/", (req, res) => {
     // res.render("index", { user: req.user })
 });
 
-app.get("/login", (req, res) => {
-    res.render("login")
-});
+// app.get("/login", (req, res) => {
+//     res.render("login")
+// });
 
-app.get("/sign-up", (req, res) => res.render("sign-up", { heading: "Sign Up", user: req.user }));
+// app.get("/sign-up", (req, res) => res.render("sign-up", { heading: "Sign Up", user: req.user }));
 
 app.post("/sign-up", (req, res, next) => {
 
@@ -142,6 +144,7 @@ app.get('/message-form', (req, res) => {
 });
 
 app.post("/message-form", (req, res, next) => {
+    console.log(req.user)
     const msg = new Message({
         title: req.body.title,
         author: req.user._id,
@@ -151,22 +154,15 @@ app.post("/message-form", (req, res, next) => {
 
     msg.save()
         .then(() => {
-            res.redirect("/messages");
+            res.redirect("/");
         })
         .catch((err) => {
             next(err);
         });
 });
 
-app.get('/messages', (req, res, next) => {
-
-});
-
-
-//Turn this to .then and catch;
 app.post('/join-club', (req, res, next) => {
     const enteredCode = req.body.code;
-    console.log("HI", req.user._id);
     if (enteredCode === process.env.member_code) {
         User.findByIdAndUpdate(req.user._id, { member: true })
             .then(user => {

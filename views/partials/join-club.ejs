@@ -1,0 +1,18 @@
+<div class="modal fade" id="joinclub" tabindex="-1" aria-labelledby="joinclub" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button button-sm" class="btn-close offset-11" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+                        <form class="row" action="/join-club" method="POST">
+                            <div class="">
+                                <label for="code" class="form-label"> Enter the secret code to become a member! </label>
+                                <input type="text" class="form-control" id="code" name="code" required>
+                                <p class="mt-1 mb-1" style="color: #dde8e9"> Hint: the _ _ _ _ project </p>
+                            </div>
+                            <button type="submit" class="btn col-6 offset-3 mt-3" style="background-color: #6FB3B8">Enter code</button>
+                        </form>
+            </div>
+        </div>
+    </div>
+</div>

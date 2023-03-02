@@ -1,0 +1,23 @@
+<div class="modal fade" id="login" tabindex="-1" aria-labelledby="login" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button button-sm" class="btn-close offset-11" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+                <form class="row" action="/log-in" method="POST">
+                    <div class="col-12">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn col-6 offset-3 mt-4"
+                        style="background-color: #6FB3B8">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

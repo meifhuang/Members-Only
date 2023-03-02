@@ -1,0 +1,26 @@
+:root {
+--biege: #f6f6f2;
+--lightblue: #badfe7;
+--green: #6FB3B8;
+}
+
+body{
+    background-color: var(--biege) !important;
+}
+
+nav {
+    background-color: var(--lightblue);
+}
+
+b {
+    color: #388087;
+}
+
+.navtitle {
+    font-size: 400px;
+}
+
+.msgbutton,
+.loginbutton {
+    background-color: var(--green);
+}
