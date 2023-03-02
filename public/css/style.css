@@ -2,25 +2,51 @@
 --biege: #f6f6f2;
 --lightblue: #badfe7;
 --green: #6FB3B8;
+--darkerg: #388087;
 }
 
 body{
     background-color: var(--biege) !important;
 }
 
-nav {
+.main-nav {
     background-color: var(--lightblue);
 }
 
 b {
-    color: #388087;
+    color: var(--darkerg);
 }
 
 .navtitle {
-    font-size: 400px;
+    font-size: 1.8em !important;
 }
 
-.msgbutton,
-.loginbutton {
-    background-color: var(--green);
+
+.card { 
+    /* box-shadow: 0px 1px 43px -4px rgba(80,92,94,0.5);
+-webkit-box-shadow: 0px 1px 43px -4px rgba(80,92,94,0.5);
+-moz-box-shadow: 0px 1px 43px -4px rgba(80,92,94,0.5); */
+    border: 1px solid var(--biege); 
+    border-radius: .2em !important;
+}
+
+.page-link {
+    color: var(--darkerg) !important;
+    border: 1px solid var(--darkerg);
+}
+
+
+.pagination .page-item.active .page-link {
+    background-color: var(--lightblue) !important;
+    border-color: var(--lightblue) !important; 
+}
+
+.pagination .page-item:hover .page-link {
+    background-color: var(--lightblue) !important; ;
+    border-color: var(--lightblue)!important; 
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: rgb(217, 222, 222) !important; 
+    color:rgb(172, 196, 196) !important; 
 }

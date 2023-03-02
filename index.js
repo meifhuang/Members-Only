@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const Message = require('./models/Message');
+const favicon = require('serve-favicon'); 
 const { body, validationResult } = require("express-validator");
 require("dotenv").config();
 
@@ -14,6 +15,8 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + '/public'));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 
 const mongoDb = process.env.mongo;
 mongoose.set('strictQuery', false);
@@ -80,17 +83,29 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
+    res.render("index", {user: req.user})
+})
+
+app.get("/messages/:page", (req, res) => {
+    const perpage = 1;
+    const page = Number(req.params.page) || 1;
     Message.find({})
+    .skip((perpage * page) - perpage)
+    .limit(perpage)
     .populate('author')
     .sort({ date: -1 })
     .then(all_messages => {
-            res.render("index", {
+        Message.countDocuments()
+        .then(count => { 
+            res.render("messages", {
                 title: "Messages",
                 messages: all_messages,
-                user: req.user
+                user: req.user,
+                current: page,
+                pages: Math.ceil(count / perpage)
             });
-        })
+        })})
         .catch(err => {
             next(err);
         })
@@ -173,5 +188,10 @@ app.post('/join-club', (req, res, next) => {
             })
     }
 })
+
+app.use((req, res) => {
+    res.status(404).render('err');
+  });
+
 
 app.listen(3000, () => console.log("app listening on port 3000"));
