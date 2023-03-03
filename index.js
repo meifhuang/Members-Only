@@ -38,20 +38,20 @@ passport.use(new LocalStrategy({
             bcrypt.compare(password, user.password)
                 .then(res => {
                     if (res) {
-                        console.log("Yay", res)
+                       
                         return done(null, user);
                     } else {
-                        console.log("incorrect pass", res)
+                        
                         return done(null, false, { message: "Incorrect password" });
                     }
                 })
                 .catch(err => {
-                    console.log("ERR", err)
+                  
                     return done(err);
                 })
         })
         .catch(err => {
-            console.log("ERROR", err)
+            
             return done(err);
         })
 }));
@@ -84,11 +84,11 @@ app.use(function (req, res, next) {
 });
 
 app.get('/', (req, res) => {
-    res.render("index", {user: req.user})
+    res.render("index", {user: req.user, method: req.method, signupError: false, loginError: false})
 })
 
 app.get("/messages/:page", (req, res) => {
-    const perpage = 1;
+    const perpage = 10;
     const page = Number(req.params.page) || 1;
     Message.find({})
     .skip((perpage * page) - perpage)
@@ -103,46 +103,93 @@ app.get("/messages/:page", (req, res) => {
                 messages: all_messages,
                 user: req.user,
                 current: page,
-                pages: Math.ceil(count / perpage)
+                pages: Math.ceil(count / perpage),
+                method: req.method,
             });
         })})
         .catch(err => {
             next(err);
         })
-    // res.render("index", { user: req.user })
 });
 
-// app.get("/login", (req, res) => {
-//     res.render("login")
-// });
+app.post("/sign-up", [ 
+    body("first")
+    .trim().isLength({min: 1}).escape()
+    .withMessage("First name must be specified"),
 
-// app.get("/sign-up", (req, res) => res.render("sign-up", { heading: "Sign Up", user: req.user }));
+    body('last')
+    .trim().isLength({min: 1}).escape()
+    .withMessage("Last name must be specified"),
 
-app.post("/sign-up", (req, res, next) => {
+    body('email')
+    .isEmail()
+    .withMessage("Email is invalid"),
+    
+    body("password").isLength({min: 6})
+    .withMessage("please try again and enter at least 6 characters for your password")
 
-    bcrypt.hash(req.body.password, 10)
-        .then(hashedPass => {
-            const user = new User({
-                first: req.body.first,
-                last: req.body.last,
-                email: req.body.email,
-                password: hashedPass
+], (req, res, next) => { 
+
+        let errors = validationResult(req);
+
+        if (errors.isEmpty()) {
+
+        User.findOne({email: req.body.email})
+                .then(found_user => {
+                    if (found_user) {
+                        errors = []
+                        errors.push({msg: 'An account under this email already exists. Please log in instead.'});
+                        res.render('index', { 
+                            user: req.user, 
+                            method: req.method,
+                            signupError: true,
+                            errors: errors
+                        })
+                    }
+                    else {
+                        bcrypt.hash(req.body.password,10)
+                        .then(hashedPass => {
+                                const user = new User({
+                                    first: req.body.first,
+                                    last: req.body.last,
+                                    email: req.body.email,
+                                    password: hashedPass
+                                })
+                        return user.save() })
+                        .then(() => {
+                        res.render("index", {
+                            user: req.user, 
+                            method: req.method,
+                            signupSuccess: true,
+                            errors: errors
+                        })})
+                        .catch(err => {
+                                next(err); })
+                        }
+                    })
+                }
+        else {
+            res.render('index', {
+                user: req.user, 
+                method: req.method,
+                errors: errors.array(),
+                signupError: true
             })
-            console.log("PASSWORD SAVED!")
-            return user.save();
-        })
-        .then(() => {
-            res.redirect("/");
-        })
-        .catch(err => {
-            next(err);
-        });
+    }
 })
 
 app.post('/log-in', passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: '/',
+    failureRedirect: '/login-fail',
 }));
+
+app.get('login-fail', (req,res) => {
+    res.render('index', {
+        user: req.user, 
+        method: 'GET',
+        loginError: true
+    })
+})
 
 app.get('/log-out', (req, res, next) => {
     req.logout(function (err) {
@@ -169,29 +216,28 @@ app.post("/message-form", (req, res, next) => {
 
     msg.save()
         .then(() => {
-            res.redirect("/");
+            res.redirect("/messages/1");
         })
         .catch((err) => {
             next(err);
-        });
-});
+        })
+    });
 
 app.post('/join-club', (req, res, next) => {
     const enteredCode = req.body.code;
     if (enteredCode === process.env.member_code) {
-        User.findByIdAndUpdate(req.user._id, { member: true })
+        User.findByIdAndUpdate(req.user._id, { member: true})
             .then(user => {
                 res.redirect('/')
             })
             .catch(err => {
                 next(err);
             })
-    }
-})
+    }})
 
-app.use((req, res) => {
-    res.status(404).render('err');
-  });
+// app.use((req, res) => {
+//     res.status(404).render('err');
+//   });
 
 
 app.listen(3000, () => console.log("app listening on port 3000"));

@@ -13,6 +13,10 @@ body{
     background-color: var(--lightblue);
 }
 
+.messagez {
+    color: var(--lightblue);
+}
+
 b {
     color: var(--darkerg);
 }
@@ -35,14 +39,13 @@ b {
     border: 1px solid var(--darkerg);
 }
 
-
 .pagination .page-item.active .page-link {
     background-color: var(--lightblue) !important;
     border-color: var(--lightblue) !important; 
 }
 
 .pagination .page-item:hover .page-link {
-    background-color: var(--lightblue) !important; ;
+    background-color: var(--lightblue) !important;
     border-color: var(--lightblue)!important; 
 }
 
@@ -50,3 +53,4 @@ b {
     background-color: rgb(217, 222, 222) !important; 
     color:rgb(172, 196, 196) !important; 
 }
+
