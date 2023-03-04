@@ -21,9 +21,13 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 const mongoDb = process.env.mongo;
 mongoose.set('strictQuery', false);
 
-mongoose.connect(mongoDb, { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.connect(mongoDb, { 
+    serverSelectionTimeoutMS: 5000, 
+    socketTimeoutMS: 45000, 
+    useUnifiedTopology: true, useNewUrlParser: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
+
 
 passport.use(new LocalStrategy({
     usernameField: 'email',
