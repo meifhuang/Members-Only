@@ -52,12 +52,11 @@ b {
     color:rgb(172, 196, 196) !important; 
 }
 
-.footer img {
-    width: 20px;
-    height: 20 px;
+.footer {
+    border-top: 1px solid rgb(143, 155, 155) 
 }
 
-footer a {
+.footer a {
     text-decoration: none;
     color: black;
 }
