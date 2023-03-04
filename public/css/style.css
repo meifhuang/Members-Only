@@ -11,6 +11,7 @@ body{
 
 .main-nav {
     background-color: var(--lightblue);
+    border-bottom:1px solid rgb(173, 191, 191);
 }
 
 .messagez {
@@ -27,11 +28,8 @@ b {
 
 
 .card { 
-    /* box-shadow: 0px 1px 43px -4px rgba(80,92,94,0.5);
--webkit-box-shadow: 0px 1px 43px -4px rgba(80,92,94,0.5);
--moz-box-shadow: 0px 1px 43px -4px rgba(80,92,94,0.5); */
     border: 1px solid var(--biege); 
-    border-radius: .2em !important;
+    border-radius: .35em !important;
 }
 
 .page-link {
@@ -54,3 +52,24 @@ b {
     color:rgb(172, 196, 196) !important; 
 }
 
+.footer img {
+    width: 20px;
+    height: 20 px;
+}
+
+footer a {
+    text-decoration: none;
+    color: black;
+}
+
+.viewmsg {
+    color: black;
+    text-decoration: none;
+}
+
+
+.welcome,
+.msgform,
+.codeDiv {
+    height: 90vh;
+}

@@ -1,6 +1,6 @@
 <%- include('partials/navbar') %>
 
-
+<div class="welcome">
     <% if (method === "POST" && errors && errors.length >= 1) {%>
         <div class="alert alert-danger col-4  text-center offset-4" role="alert">
         <ul> 
@@ -26,7 +26,7 @@
                     <div class="alert alert-success text-center col-6 offset-3" role="alert">
                        Congrats!! You're a member now! See who wrote these messages! <a href="messages/1"> messages </a>
                     </div>
-
+                
     <%} else { %>
     <div class="card text-center col-4 offset-4">
         <div class="card-header">
@@ -39,13 +39,8 @@
         </div>
       </div>
     </div>
-    <% } %> 
+    <% } %>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-            crossorigin="anonymous">
-    </script>
-
-    </body>
-
-</html>
+    <%- include('partials/footer') %>
+     

@@ -32,7 +32,6 @@ passport.use(new LocalStrategy({
     User.findOne({ email: email }).
         then(user => {
             if (!user) {
-                console.log("WRONG EMAIL");
                 return done(null, false, { message: "Incorrect email" });
             }
             bcrypt.compare(password, user.password)
@@ -84,7 +83,7 @@ app.use(function (req, res, next) {
 });
 
 app.get('/', (req, res) => {
-    res.render("index", {user: req.user, method: req.method, signupError: false, loginError: false})
+    res.render("index", {user: req.user, method: req.method, signupError: false, loginError: false, codeCorrect: false})
 })
 
 app.get("/messages/:page", (req, res) => {
@@ -183,7 +182,7 @@ app.post('/log-in', passport.authenticate('local', {
     failureRedirect: '/login-fail',
 }));
 
-app.get('login-fail', (req,res) => {
+app.get('/login-fail', (req,res) => {
     res.render('index', {
         user: req.user, 
         method: 'GET',
@@ -228,12 +227,22 @@ app.post('/join-club', (req, res, next) => {
     if (enteredCode === process.env.member_code) {
         User.findByIdAndUpdate(req.user._id, { member: true})
             .then(user => {
-                res.redirect('/')
+                res.render('code', {
+                    user: req.user, 
+                    codeCorrect: true
+                })
             })
             .catch(err => {
                 next(err);
             })
-    }})
+    }
+    else {
+        res.render('code', {
+            user: req.user, 
+            codeCorrect: false
+        })
+    }
+})
 
 // app.use((req, res) => {
 //     res.status(404).render('err');

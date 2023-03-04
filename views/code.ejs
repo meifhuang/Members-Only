@@ -1,0 +1,17 @@
+<%- include('partials/navbar') %>
+<div class="codeDiv">
+<% if (codeCorrect) {%> 
+<div class="alert alert-success col-4 offset-4 text-center" role="alert">
+    <h5> Congrats! You are now a member! </h5> 
+    <p> You can now see who wrote each message! </p>
+    <a href="/messages/1" class="viewmsg"> &gt;&gt; </a>
+</div>
+<%} else {%>  
+    <div class="alert alert-danger col-4 offset-4 text-center" role="alert">
+        Sorry that's incorrect but feel free to try again! 
+    </div>
+
+<%}%> 
+</div>
+
+<%- include('partials/footer') %>
